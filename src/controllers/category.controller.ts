@@ -19,7 +19,7 @@ const getCategory = catchAsync(async (req, res) => {
     res.send(category);
 });
 
-const getCategorieas = catchAsync(async (req, res) => {
+const getCategories = catchAsync(async (req, res) => {
     const filter = pick(req.query, ['title']);
     const options = pick(req.query, ['sortBy', 'limit', 'page']);
     const categories = await categoryService.queryCategories(filter, options);
@@ -43,7 +43,7 @@ const deleteCategory = catchAsync(async (req, res) => {
 export default {
     createCategory,
     getCategory,
-    getCategorieas,
+    getCategories,
     updateCategory,
     deleteCategory
 }
