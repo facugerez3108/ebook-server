@@ -140,5 +140,15 @@ const deletePrestamoById = async (prestamoId: number): Promise<Prestamo> => {
         throw new ApiError(httpStatus.NOT_FOUND, 'Prestamo not found');
     }
     await prisma.prestamo.delete({ where: { id: prestamoId } });
-    return prestamo;
+    return prestamo;   
+}
+
+
+export default {
+    createPrestamo,
+    getPrestamoByCode,
+    getPrestamoById,
+    queryPrestamos,
+    updatePrestamoById,
+    deletePrestamoById
 }

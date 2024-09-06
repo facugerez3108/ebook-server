@@ -2,7 +2,6 @@ import { Comprador, Prisma } from "@prisma/client";
 import httpStatus from "http-status";
 import prisma from "../client";
 import ApiError from "utils/ApiError";
-import { number } from "joi";
 
 const createClient = async (
     codigo: string,
@@ -61,7 +60,7 @@ const queryClients = async <Key extends keyof Comprador>(
         limit?: number;
         page?: number;
         sortBy?: string;
-        sortType: 'asc' | 'desc';
+        sortType?: 'asc' | 'desc';
     },
     keys: Key[] = [
         'id',
@@ -109,7 +108,7 @@ const updateClientById = async <Key extends keyof Comprador>(
         select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {}),
     });
 
-    return updateBody as Pick<Comprador, Key> | null;
+    return updatedClient as Pick<Comprador, Key> | null;
 };
 
 

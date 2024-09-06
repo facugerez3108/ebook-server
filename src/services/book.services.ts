@@ -76,7 +76,7 @@ const queryBooks = async <Key extends keyof Book>(
         limit?: number;
         page?: number;
         sortBy?: string;
-        sortType: 'asc' | 'desc';
+        sortType?: 'asc' | 'desc';
     },
     keys: Key[] = [
         'id',

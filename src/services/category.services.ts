@@ -4,10 +4,9 @@ import prisma from "../client";
 import { Category } from "@prisma/client";
 
 const createCategory = async (
-    id: number,
     title: string,
 ): Promise<Category> => {
-    if(await getCategoryById(id)){
+    if(await getCategoryByTitle(title)){
         throw new ApiError(httpStatus.BAD_REQUEST, 'Category already exists')
     }
 
@@ -29,6 +28,15 @@ const getCategoryById = async <Key extends keyof Category>(
     }) as Promise<Pick<Category, Key> | null>;
 }
 
+const getCategoryByTitle = async <Key extends keyof Category>(
+    title: string,
+    keys: Key[] = ['id', 'title', 'createdAt', 'updatedAt'] as Key[]
+): Promise<Pick<Category, Key> | null> => {
+    return prisma.category.findUnique({
+        where: { title },
+        select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {})
+    }) as Promise<Pick<Category, Key> | null>;
+}
 
 const queryCategories = async <Key extends keyof Category>(
     filter: object,
@@ -94,6 +102,7 @@ const deleteCategory = async (
 export default {
     createCategory,
     getCategoryById,
+    getCategoryByTitle,
     queryCategories,
     updateCategory,
     deleteCategory
