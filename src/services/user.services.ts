@@ -3,6 +3,8 @@ import httpStatus from 'http-status';
 import prisma from '../client';
 import ApiError from '../utils/ApiError';
 import { encryptPassword } from '../utils/encryption';
+import jwt from 'jsonwebtoken';
+import config from '../config/config';
 
 /**
  * Create a user
@@ -120,6 +122,35 @@ const getUserByEmail = async <Key extends keyof User>(
   }) as Promise<Pick<User, Key> | null>;
 };
 
+
+const getUserRole = async (token: string): Promise<Role> => {
+  try {
+      const decodedToken = jwt.verify(token, config.jwt.secret)
+
+      let userId: number;
+      if(typeof decodedToken === 'object' && decodedToken.sub !== undefined){
+          if (typeof decodedToken.sub === 'string'){
+              userId = parseInt(decodedToken.sub);
+          }else {
+              userId = decodedToken.sub;
+          }
+      }else {
+          throw new Error('Invalid token');
+      }
+      console.log(userId)
+
+      const user = await getUserById(userId);
+      if(!user){
+          throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+      }
+      
+      return user.role;
+  }catch (error) {
+      throw new ApiError(httpStatus.UNAUTHORIZED, 'Invalid token');
+  }
+}
+
+
 /**
  * Update user by id
  * @param {ObjectId} userId
@@ -164,6 +195,7 @@ export default {
   createUser,
   queryUsers,
   getUserById,
+  getUserRole,
   getUserByEmail,
   updateUserById,
   deleteUserById

@@ -14,6 +14,10 @@ router
   .get(auth(), validate(userValidation.getUsers), userController.getUsers);
 
 router
+  .route('/role')
+  .get(validate(userValidation.getUser), userController.getUserRoleCtlr)
+
+router
     .route('/:userId')
     .get(auth(), validate(userValidation.getUser), userController.getUser)
     .patch(auth(), validate(userValidation.updateUser), userController.updateUser)

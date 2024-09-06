@@ -3,7 +3,7 @@ import pick from "../utils/pick";
 import ApiError from "../utils/ApiError";
 import catchAsync from "../utils/catchAsync";
 import { userService } from "../services";
-
+import { Request, Response, NextFunction } from "express";
 
 const createUser = catchAsync(async(req, res) => {
     const {name, email, password, role} = req.body;
@@ -27,6 +27,24 @@ const getUser = catchAsync(async (req, res) => {
     res.send(user);
 });
 
+const getUserRoleCtlr = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    if (!req.headers.authorization) {
+      throw new ApiError(httpStatus.UNAUTHORIZED, 'Authorization header is missing');
+    }
+    
+    const token = req.headers.authorization.split(' ')[1];
+  
+    // Obtener el rol del usuario usando el servicio getUserRole
+    const role = await userService.getUserRole(token);
+    console.log('Token recibido en el backend:', token);
+    res.send({ role });
+  } catch (error: any) {
+    console.error("Error obteniendo el rol del usuario:", error);
+    res.status(error.statusCode || 500).send({ message: error.message });
+  }
+};
+
 const updateUser = catchAsync(async (req, res) => {
     const userId = parseInt(req.params.userId, 10); 
     const user = await userService.updateUserById(userId, req.body);
@@ -44,5 +62,6 @@ const deleteUser = catchAsync(async (req, res) => {
     getUsers,
     getUser,
     updateUser,
+    getUserRoleCtlr,
     deleteUser
   };
