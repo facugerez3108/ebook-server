@@ -1,6 +1,6 @@
 import { Prisma, Prestamo, PrestamoType } from "@prisma/client";
 import httpStatus from "http-status";
-import ApiError from "utils/ApiError";
+import ApiError from "../utils/ApiError";
 import prisma from '../client';
 
 

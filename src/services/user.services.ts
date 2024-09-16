@@ -40,7 +40,7 @@ const createUser = async (
  * @returns {Promise<QueryResult>}
  */
 const queryUsers = async <Key extends keyof User>(
-  filter: object,
+  filter: object = {},
   options: {
     limit?: number;
     page?: number;
@@ -63,9 +63,9 @@ const queryUsers = async <Key extends keyof User>(
   const sortBy = options.sortBy;
   const sortType = options.sortType ?? 'desc';
   const users = await prisma.user.findMany({
-    where: filter,
+    where: Object.keys(filter).length ? filter : {}, 
     select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {}),
-    skip: page * limit,
+    skip: (page - 1) * limit, 
     take: limit,
     orderBy: sortBy ? { [sortBy]: sortType } : undefined
   });
@@ -182,8 +182,8 @@ const updateUserById = async <Key extends keyof User>(
  * @param {ObjectId} userId
  * @returns {Promise<User>}
  */
-const deleteUserById = async (userId: number): Promise<User> => {
-  const user = await getUserById(userId);
+const deleteUserById = async (id: number): Promise<User> => {
+  const user = await getUserById(id);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }

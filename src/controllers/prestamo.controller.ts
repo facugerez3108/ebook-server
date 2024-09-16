@@ -1,7 +1,7 @@
 import { prestamoService } from "../services";
-import pick from "utils/pick";
-import ApiError from "utils/ApiError";
-import catchAsync from "utils/catchAsync";
+import pick from "../utils/pick";
+import ApiError from "../utils/ApiError";
+import catchAsync from "../utils/catchAsync";
 import httpStatus from "http-status";
 
 

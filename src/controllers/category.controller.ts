@@ -1,8 +1,8 @@
 import httpStatus from "http-status";
-import catchAsync from "utils/catchAsync";
+import catchAsync from "../utils/catchAsync";
 import { categoryService } from "../services";
-import ApiError from "utils/ApiError";
-import pick from "utils/pick";
+import ApiError from "../utils/ApiError";
+import pick from "../utils/pick";
 
 const createCategory = catchAsync(async (req, res) => {
     const { title } = req.body;

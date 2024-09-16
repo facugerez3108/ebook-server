@@ -1,7 +1,7 @@
 import { Comprador, Prisma } from "@prisma/client";
 import httpStatus from "http-status";
 import prisma from "../client";
-import ApiError from "utils/ApiError";
+import ApiError from "../utils/ApiError";
 
 const createClient = async (
     codigo: string,

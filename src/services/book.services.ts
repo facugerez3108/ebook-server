@@ -1,8 +1,7 @@
 import { Book, Category, Prisma } from "@prisma/client";
 import httpStatus from "http-status";
-import ApiError from "utils/ApiError";
+import ApiError from "../utils/ApiError";
 import prisma from "../client";
-import { objectEnumNames } from "@prisma/client/runtime/library";
 
 const createBook = async (
     title: string,

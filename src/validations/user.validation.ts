@@ -25,7 +25,7 @@ const getUsers = {
 
 const getUser = {
     params: Joi.object().keys({
-      userId: Joi.number().integer()
+      id: Joi.number().integer()
     })
 };
 
@@ -45,7 +45,7 @@ const updateUser = {
   
   const deleteUser = {
     params: Joi.object().keys({
-      userId: Joi.number().integer()
+      id: Joi.number().integer()
     })
 };
   

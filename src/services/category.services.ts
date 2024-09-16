@@ -1,5 +1,5 @@
 import httpStatus from "http-status";
-import ApiError from "utils/ApiError";
+import ApiError from "../utils/ApiError";
 import prisma from "../client";
 import { Category } from "@prisma/client";
 
