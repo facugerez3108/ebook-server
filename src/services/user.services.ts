@@ -160,9 +160,9 @@ const getUserRole = async (token: string): Promise<Role> => {
 const updateUserById = async <Key extends keyof User>(
   userId: number,
   updateBody: Prisma.UserUpdateInput,
-  keys: Key[] = ['id', 'email', 'name', 'role'] as Key[]
+  keys: Key[] = ['email', 'name', 'role'] as Key[]
 ): Promise<Pick<User, Key> | null> => {
-  const user = await getUserById(userId, ['id', 'email', 'name']);
+  const user = await getUserById(userId, ['id', 'email', 'name', 'role']);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
