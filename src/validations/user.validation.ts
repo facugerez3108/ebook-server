@@ -32,7 +32,7 @@ const getUser = {
 
 const updateUser = {
     params: Joi.object().keys({
-      userId: Joi.number().integer()
+      id: Joi.number().integer()
     }),
     body: Joi.object()
       .keys({
