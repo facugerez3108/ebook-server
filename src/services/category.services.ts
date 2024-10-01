@@ -1,7 +1,7 @@
 import httpStatus from "http-status";
 import ApiError from "../utils/ApiError";
 import prisma from "../client";
-import { Category } from "@prisma/client";
+import { Category, Prisma } from "@prisma/client";
 
 const createCategory = async (
     title: string,
@@ -39,7 +39,7 @@ const getCategoryByTitle = async <Key extends keyof Category>(
 }
 
 const queryCategories = async <Key extends keyof Category>(
-    filter: object,
+    filter: object = {},
     options: {
         limit?: number;
         page?: number;
@@ -59,30 +59,32 @@ const queryCategories = async <Key extends keyof Category>(
     const sortType = options.sortType ?? 'desc';
 
     const categories = await prisma.category.findMany({
-        where: filter,
+        where: Object.keys(filter).length ? filter : {},
         select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {}),
-        skip: page * limit,
+        skip: (page - 1) * limit,
         take: limit,
         orderBy: sortBy ? { [sortBy]: sortType } : undefined
     });
     return categories as Pick<Category, Key>[];
 }
 
-const updateCategory = async (
+const updateCategory = async <Key extends keyof Category> (
     id: number,
-    title: string
-): Promise<Category> => {
-    const category = await getCategoryById(id);
+    updateBody: Prisma.CategoryUpdateInput,
+    keys: Key[] = ['title'] as Key[]
+): Promise<Pick<Category, Key> | null> => {
+    const category = await getCategoryById(id, ['id', 'title']);
     if (!category) {
         throw new ApiError(httpStatus.NOT_FOUND, 'Category not found');
     }
     
-    return prisma.category.update({
-        where: { id },
-        data: {
-            title
-        }
+    const updateCategory = await prisma.category.update({
+        where: { id: category.id },
+        data: updateBody,
+        select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {})
     })
+
+    return updateCategory as Pick<Category, Key> | null;
 }
 
 const deleteCategory = async (

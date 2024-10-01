@@ -163,18 +163,25 @@ const updateUserById = async <Key extends keyof User>(
   keys: Key[] = ['email', 'name', 'role'] as Key[]
 ): Promise<Pick<User, Key> | null> => {
   const user = await getUserById(userId, ['id', 'email', 'name', 'role']);
-  if (!user) {
+  if(!user){
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
-  if (updateBody.email && (await getUserByEmail(updateBody.email as string))) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
+
+  if(updateBody.email){
+    const existingUser = await getUserByEmail(updateBody.email as string);
+    if(existingUser && existingUser.id !== userId){
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
+    }
   }
+
   const updatedUser = await prisma.user.update({
     where: { id: user.id },
     data: updateBody,
     select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {})
   });
+
   return updatedUser as Pick<User, Key> | null;
+
 };
 
 /**

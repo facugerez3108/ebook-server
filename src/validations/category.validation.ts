@@ -17,13 +17,13 @@ const getCategories = {
 
 const getCategory = {
     params: Joi.object().keys({
-        categoryId: Joi.number().integer()
+        id: Joi.number().integer()
     })
 }
 
 const updateCategory = {
     params: Joi.object().keys({
-        categoryId: Joi.number().integer()
+        id: Joi.number().integer()
     }),
     body: Joi.object().keys({
         title: Joi.string(),

@@ -1,8 +1,9 @@
 import httpStatus from "http-status";
 import catchAsync from "../utils/catchAsync";
-import { categoryService } from "../services";
+import { categoryService, userService } from "../services";
 import ApiError from "../utils/ApiError";
 import pick from "../utils/pick";
+import { Request, Response, NextFunction } from "express";
 
 const createCategory = catchAsync(async (req, res) => {
     const { title } = req.body;
@@ -26,11 +27,17 @@ const getCategories = catchAsync(async (req, res) => {
     res.send(categories);
 });
 
-const updateCategory = catchAsync(async (req, res) => {
-    const categoryId = parseInt(req.params.id, 10);
-    const category = await categoryService.updateCategory(categoryId, req.body);
-    res.send(category);
-});
+const updateCategory = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const updateBody = req.body
+
+    try{
+        const updatedCategory = await categoryService.updateCategory(parseInt(id), updateBody);
+        res.json(updatedCategory);  
+    }catch(error){  
+        console.error("Error updating category:", error);
+    }
+};
 
 
 const deleteCategory = catchAsync(async (req, res) => {
