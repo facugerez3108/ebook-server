@@ -4,7 +4,7 @@ const createBook = {
     body: Joi.object().keys({
         title: Joi.string().required(),
         autor: Joi.string().required(),
-        code: Joi.number().required(),
+        code: Joi.string().required(),
         categoryId: Joi.number().integer(),
         cantidad: Joi.number().required()
     })
@@ -22,13 +22,13 @@ const getBooks = {
 
 const getBook = {
     params: Joi.object().keys({
-        bookId: Joi.number().integer()
+        id: Joi.number().integer()
     })
 }
 
 const editBook = {
     params: Joi.object().keys({
-        bookId: Joi.number().integer()
+        id: Joi.number().integer()
     }),
     body: Joi.object()
         .keys({
@@ -43,7 +43,7 @@ const editBook = {
 
 const deleteBook = {
     params: Joi.object().keys({
-        bookId: Joi.number().integer()
+        id: Joi.number().integer()
     })
 }
 

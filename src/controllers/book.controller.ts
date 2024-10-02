@@ -3,6 +3,7 @@ import pick from "../utils/pick";
 import ApiError from "../utils/ApiError";
 import catchAsync from "../utils/catchAsync";
 import { bookService } from "../services";
+import { Request, Response } from "express";
 
 const createBook = catchAsync(async(req, res) => {
     const {title, autor, categoryId, code, cantidad} = req.body;
@@ -26,15 +27,24 @@ const getBooks = catchAsync (async (req, res) => {
     res.send(result);
 })
 
-const editBook = catchAsync(async(req, res) => {
-    const bookId = parseInt(req.params.id, 10);
-    const book = await bookService.updateBook(bookId, req.body);
-    res.send(book);
-});
+const editBook = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const updateBody = req.body;
+    
+    try{
+        const updateBook = await bookService.updateBook(
+            parseInt(id),
+            updateBody
+        )
+        res.json(updateBook);
+    }catch(error){
+        console.error("Error updating book:", error);
+    }
+}
 
 const deleteBook = catchAsync(async(req, res) => {
-    const bookId = parseInt(req.params.id, 10);
-    await bookService.deleteBook(bookId);
+    const id = parseInt(req.params.id, 10);
+    await bookService.deleteBook(id);
     res.status(httpStatus.NO_CONTENT).send();
 });
 

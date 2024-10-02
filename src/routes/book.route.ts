@@ -13,7 +13,7 @@ router
 
 
 router
-    .route('/:bookId')
+    .route('/:id')
     .get(validate(bookValidation.getBook), bookController.getBook)
     .patch(validate(bookValidation.editBook), bookController.editBook)
     .delete(validate(bookValidation.deleteBook), bookController.deleteBook);    

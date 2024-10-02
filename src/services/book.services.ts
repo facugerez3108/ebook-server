@@ -70,7 +70,7 @@ const getBookByTitle = async <Key extends keyof Book>(
 }
 
 const queryBooks = async <Key extends keyof Book>(
-    filter: object,
+    filter: object = {},
     options: {
         limit?: number;
         page?: number;
@@ -92,9 +92,9 @@ const queryBooks = async <Key extends keyof Book>(
    const sortBy = options.sortBy;
    const sortType = options.sortType ?? 'desc';
    const books = await prisma.book.findMany({
-       where: filter,
+       where: Object.keys(filter).length ? filter : {},
        select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {}),
-       skip: page * limit,
+       skip: (page - 1) * limit,
        take: limit,
        orderBy: sortBy ? { [sortBy]: sortType } : undefined
    })
@@ -103,7 +103,7 @@ const queryBooks = async <Key extends keyof Book>(
 
 
 const updateBook = async <Key extends keyof Book>(
-    bookId: number,
+    id: number,
     updateBody: Prisma.BookUpdateInput,
     keys: Key[] = [
         'id',
@@ -113,7 +113,7 @@ const updateBook = async <Key extends keyof Book>(
         'cantidad',
     ] as Key[]
 ): Promise<Pick<Book, Key> | null> => {
-    const book = await getBookById(bookId, ['autor', 'cantidad', 'title', 'categoryId', 'code']);
+    const book = await getBookById(id, ['autor', 'cantidad', 'title', 'categoryId', 'code']);
     
     if(!book){
         throw new ApiError(httpStatus.NOT_FOUND, 'Book not found')
@@ -124,7 +124,7 @@ const updateBook = async <Key extends keyof Book>(
     }
     
     const updatedBook = await prisma.book.update({
-        where: { id: bookId },
+        where: { id: id },
         data: updateBody,
         select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {})
     });
@@ -132,8 +132,8 @@ const updateBook = async <Key extends keyof Book>(
     return updatedBook as Pick<Book, Key> | null;
 }
 
-const deleteBook = async (bookId: number): Promise<Book> => {
-    const book = await getBookById(bookId);
+const deleteBook = async (id: number): Promise<Book> => {
+    const book = await getBookById(id);
     if (!book) {
         throw new ApiError(httpStatus.NOT_FOUND, 'Book not found');
     }
