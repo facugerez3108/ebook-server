@@ -49,13 +49,13 @@ const getClientById = async <Key extends keyof Comprador> (
     ] as Key[]
 ): Promise<Pick<Comprador, Key> | null> => {
     return prisma.comprador.findUnique({
-        where: { id: id },
+        where: { id },
         select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {}),
     }) as Promise<Pick<Comprador, Key> | null>;
 };
 
 const queryClients = async <Key extends keyof Comprador>(
-    filter: object,
+    filter: object = {},
     options: {
         limit?: number;
         page?: number;
@@ -76,7 +76,7 @@ const queryClients = async <Key extends keyof Comprador>(
     const sortBy = options.sortBy ?? 'createdAt';
     const sortType = options.sortType ?? 'desc';
     return prisma.comprador.findMany({
-        where: filter,
+        where: Object.keys(filter).length ? filter : {},
         select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {}),
         skip: (page - 1) * limit,
         take: limit,
@@ -85,7 +85,7 @@ const queryClients = async <Key extends keyof Comprador>(
 };
 
 const updateClientById = async <Key extends keyof Comprador>(
-    clientId: number,
+    id: number,
     updateBody: Prisma.CompradorUpdateInput,
     keys: Key[] = [
         'id',
@@ -94,7 +94,7 @@ const updateClientById = async <Key extends keyof Comprador>(
         'apellido',
     ] as Key[]
 ): Promise<Pick<Comprador, Key> | null> => {
-    const comprador = await getClientById(clientId, ['id', 'codigo', 'nombre', 'apellido']);
+    const comprador = await getClientById(id, ['id', 'codigo', 'nombre', 'apellido']);
     if(!comprador){
         throw new ApiError(httpStatus.NOT_FOUND, 'Comprador not found');
     }
@@ -103,7 +103,7 @@ const updateClientById = async <Key extends keyof Comprador>(
     }
 
     const updatedClient = await prisma.comprador.update({
-        where: { id: clientId },
+        where: { id: comprador.id },
         data: updateBody,
         select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {}),
     });
@@ -112,12 +112,12 @@ const updateClientById = async <Key extends keyof Comprador>(
 };
 
 
-const deleteClientById = async (clientId: number): Promise<Comprador> => {
-    const comprador = await getClientById(clientId);
+const deleteClientById = async (id: number): Promise<Comprador> => {
+    const comprador = await getClientById(id);
     if(!comprador){
         throw new ApiError(httpStatus.NOT_FOUND, 'Comprador not found');
     }
-    await prisma.comprador.delete({ where: { id: clientId } });
+    await prisma.comprador.delete({ where: { id: id } });
     return comprador;
 };
 

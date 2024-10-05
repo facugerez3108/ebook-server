@@ -11,7 +11,7 @@ router
   .get(validate(clientValidation.getClients), clientController.getClients);
 
 router
-  .route('/:clientId')
+  .route('/:id')
   .get(validate(clientValidation.getClient), clientController.getClient)
   .patch(validate(clientValidation.editClient), clientController.updateClient)
   .delete(validate(clientValidation.deleteClient), clientController.deleteClient);
