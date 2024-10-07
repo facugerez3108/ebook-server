@@ -22,13 +22,13 @@ const getClients = {
 
 const getClient = {
     params: Joi.object().keys({
-        clientId: Joi.number().integer()
+        id: Joi.number().integer()
     })
 }
 
 const editClient = {
     params: Joi.object().keys({
-        clientId: Joi.number().integer()
+        id: Joi.number().integer()
     }),
     body: Joi.object().keys({
         nombre: Joi.string(),
@@ -39,7 +39,7 @@ const editClient = {
 
 const deleteClient = {
     params: Joi.object().keys({
-        clientId: Joi.number().integer()
+        id: Joi.number().integer()
     })
 }
 

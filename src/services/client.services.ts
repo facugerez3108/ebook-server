@@ -98,8 +98,12 @@ const updateClientById = async <Key extends keyof Comprador>(
     if(!comprador){
         throw new ApiError(httpStatus.NOT_FOUND, 'Comprador not found');
     }
-    if(updateBody.codigo && (await getClientByCode(updateBody.codigo as string))){
-        throw new ApiError(httpStatus.BAD_REQUEST, 'Comprador already exists');
+    
+    if(updateBody.codigo){
+        const existingClient = await getClientByCode(updateBody.codigo as string);
+        if(existingClient && existingClient.id !== id){
+            throw new ApiError(httpStatus.BAD_REQUEST, 'Client already exists');
+        }
     }
 
     const updatedClient = await prisma.comprador.update({
