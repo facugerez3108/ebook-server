@@ -64,7 +64,7 @@ const getPrestamoById = async <Key extends keyof Prestamo>(
 }
 
 const queryPrestamos = async <Key extends keyof Prestamo>(
-    filter: object,
+    filter: object = {},
     options: {
         sortBy?: string;
         limit?: number;
@@ -81,14 +81,14 @@ const queryPrestamos = async <Key extends keyof Prestamo>(
         'status'
     ] as Key[]
 ): Promise<Pick<Prestamo, Key>[]> => {
-    const sortBy = options.sortBy ?? 'createdAt';
+    const sortBy = options.sortBy;
     const sortType = options.sortType ?? 'desc';
     const limit = options.limit ?? 10;
     const page = options.page ?? 1;
     const prestamos = await prisma.prestamo.findMany({
-        where: filter,
+        where: Object.keys(filter).length ? filter : {},
         orderBy: sortBy ? { [sortBy]: sortType } : undefined,
-        skip: page * limit,
+        skip: (page - 1) * limit,
         take: limit,
         select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {})
     });
@@ -96,7 +96,7 @@ const queryPrestamos = async <Key extends keyof Prestamo>(
 }
 
 const updatePrestamoById = async <Key extends keyof Prestamo>(
-    prestamoId: number,
+    id: number,
     updateBody: Prisma.PrestamoUpdateInput,
     keys: Key[] = [
         'id',
@@ -108,7 +108,7 @@ const updatePrestamoById = async <Key extends keyof Prestamo>(
         'status'
     ] as Key[]
 ):Promise<Pick<Prestamo, Key> | null> => {
-    const prestamo = await getPrestamoById(prestamoId, [
+    const prestamo = await getPrestamoById(id, [
         'bookId', 
         'codigo', 
         'compradorId', 
@@ -127,19 +127,19 @@ const updatePrestamoById = async <Key extends keyof Prestamo>(
     }
 
     const updatedPrestamo = await prisma.prestamo.update({
-        where: { id: prestamoId },
+        where: { id: id },
         data: updateBody,
         select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {})
     });
     return updatedPrestamo as Pick<Prestamo, Key> | null;
 }
 
-const deletePrestamoById = async (prestamoId: number): Promise<Prestamo> => {
-    const prestamo = await getPrestamoById(prestamoId);
+const deletePrestamoById = async (id: number): Promise<Prestamo> => {
+    const prestamo = await getPrestamoById(id);
     if(!prestamo){
         throw new ApiError(httpStatus.NOT_FOUND, 'Prestamo not found');
     }
-    await prisma.prestamo.delete({ where: { id: prestamoId } });
+    await prisma.prestamo.delete({ where: { id: id } });
     return prestamo;   
 }
 
