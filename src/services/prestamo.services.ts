@@ -80,19 +80,41 @@ const queryPrestamos = async <Key extends keyof Prestamo>(
         'codigo',
         'status'
     ] as Key[]
-): Promise<Pick<Prestamo, Key>[]> => {
+): Promise<any[]> => {
     const sortBy = options.sortBy;
     const sortType = options.sortType ?? 'desc';
     const limit = options.limit ?? 10;
     const page = options.page ?? 1;
+
     const prestamos = await prisma.prestamo.findMany({
         where: Object.keys(filter).length ? filter : {},
         orderBy: sortBy ? { [sortBy]: sortType } : undefined,
         skip: (page - 1) * limit,
         take: limit,
-        select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {})
+        select: {
+            id: true,
+            fechaPrestamo: true,
+            fechaDevolucion: true,
+            codigo: true,
+            status: true,
+            comprador: { 
+                select: {
+                    nombre: true,
+                    apellido: true,
+                    codigo: true
+                }
+            },
+            book: {
+                select: {
+                    title: true,
+                    autor: true,
+                    code: true,
+                    cantidad: true
+                }
+            }
+        }
     });
-    return prestamos as Pick<Prestamo, Key>[];
+    return prestamos;
 }
 
 const updatePrestamoById = async <Key extends keyof Prestamo>(
