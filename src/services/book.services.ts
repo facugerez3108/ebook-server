@@ -2,6 +2,7 @@ import { Book, Category, Prisma } from "@prisma/client";
 import httpStatus from "http-status";
 import ApiError from "../utils/ApiError";
 import prisma from "../client";
+import categoryServices from "./category.services";
 
 const createBook = async (
     title: string,
@@ -10,8 +11,18 @@ const createBook = async (
     code: string,
     cantidad: number,
 ): Promise<Book> => {
-    if(await getBookByTitle(title)){
-        throw new ApiError(httpStatus.BAD_REQUEST, 'Book already exists')
+    console.log("Category ID recibido:", categoryId);
+
+    // Verificar si la categoría existe
+    const category = await categoryServices.getCategoryById(categoryId, [
+        'id',
+        'title',
+        'createdAt',
+        'updatedAt'
+    ])
+  
+    if (!category) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Categoría no encontrada');
     }
 
     return prisma.book.create({
