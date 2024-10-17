@@ -46,7 +46,7 @@ const getPrestamoByCode = async <Key extends keyof Prestamo>(
 }
 
 const getPrestamoById = async <Key extends keyof Prestamo>(
-    prestamoId: number,
+    id: number,
     keys: Key[] = [
         'id',
         'compradorId',
@@ -58,7 +58,7 @@ const getPrestamoById = async <Key extends keyof Prestamo>(
     ] as Key[]
 ): Promise<Pick<Prestamo, Key> | null> => {
     return prisma.prestamo.findUnique({
-        where: { id: prestamoId },
+        where: { id: id },
         select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {})
     }) as Promise<Pick<Prestamo, Key> | null>;
 }

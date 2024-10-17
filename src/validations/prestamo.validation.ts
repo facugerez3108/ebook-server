@@ -23,15 +23,9 @@ const getPrestamos = {
     }),
 }
 
-const getUser = {
-    params: Joi.object().keys({
-        userId: Joi.number().integer(),
-    }),
-}
-
 const updatePrestamo = {
     params: Joi.object().keys({
-        prestamoId: Joi.number().integer(),
+        id: Joi.number().integer(),
     }),
     body: Joi.object()
         .keys({
@@ -42,9 +36,15 @@ const updatePrestamo = {
         .min(1),
 }
 
+const getPrestamo = {
+    params: Joi.object().keys({
+        id: Joi.number().integer(),
+    }),
+}
+
 const deletePrestamo = {
     params: Joi.object().keys({
-        prestamoId: Joi.number().integer(),
+        id: Joi.number().integer(),
     }),
 }
 
@@ -52,7 +52,7 @@ const deletePrestamo = {
 export default {
     createPrestamo,
     getPrestamos,
-    getUser,
+    getPrestamo,
     updatePrestamo,
     deletePrestamo
 }   

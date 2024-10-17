@@ -13,8 +13,8 @@ router
 
 
 router
-    .route('/:prestamoId')
-    .get(validate(prestamoValidation.getUser), prestamoController.getPrestamo)
+    .route('/:id')
+    .get(validate(prestamoValidation.getPrestamo), prestamoController.getPrestamo)
     .patch(validate(prestamoValidation.updatePrestamo), prestamoController.updatePrestamo)
     .delete(validate(prestamoValidation.deletePrestamo), prestamoController.deletePrestamo);
 

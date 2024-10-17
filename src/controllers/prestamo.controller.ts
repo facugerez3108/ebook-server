@@ -12,8 +12,8 @@ const createPrestamo = catchAsync(async(req, res) => {
 });
 
 const getPrestamo = catchAsync(async(req, res) => {
-    const prestamoId = parseInt(req.params.id, 10);
-    const prestamo = await prestamoService.getPrestamoById(prestamoId);
+    const id = parseInt(req.params.id, 10);
+    const prestamo = await prestamoService.getPrestamoById(id);
     if(!prestamo){
         throw new ApiError(httpStatus.NOT_FOUND, 'Prestamo not found');
     }
