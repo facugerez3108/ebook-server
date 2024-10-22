@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model User {
@@ -20,13 +21,13 @@ model User {
 }
 
 model Comprador {
-  id        Int      @id @default(autoincrement())
-  codigo    String   @unique
+  id        Int       @id @default(autoincrement())
+  codigo    String    @unique
   nombre    String
   apellido  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  prestamo   Prestamo?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  prestamo  Prestamo?
 }
 
 model Token {
@@ -50,35 +51,35 @@ model Image {
 
 model Category {
   id        Int      @id @default(autoincrement())
-  title     String    @unique
+  title     String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
   Book      Book[]
 }
 
 model Book {
-  id         Int      @id @default(autoincrement())
+  id         Int       @id @default(autoincrement())
   categoryId Int
   code       String
-  title      String  @unique
+  title      String    @unique
   autor      String
   cantidad   Int
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  category   Category @relation(fields: [categoryId], references: [id])
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  category   Category  @relation(fields: [categoryId], references: [id])
   prestamo   Prestamo?
 }
 
 model Prestamo {
-  id   Int  @id @default(autoincrement())
-  compradorId   Int  @unique
-  bookId    Int  @unique
-  fechaPrestamo   DateTime @default(now())
-  fechaDevolucion  DateTime
-  codigo    String   @unique
-  status    PrestamoType
-  comprador   Comprador @relation(fields: [compradorId], references: [id])
-  book     Book @relation(fields: [bookId], references: [id])
+  id              Int          @id @default(autoincrement())
+  compradorId     Int          @unique
+  bookId          Int          @unique
+  fechaPrestamo   DateTime     @default(now())
+  fechaDevolucion DateTime
+  codigo          String       @unique
+  status          PrestamoType
+  comprador       Comprador    @relation(fields: [compradorId], references: [id])
+  book            Book         @relation(fields: [bookId], references: [id])
 }
 
 enum PrestamoType {

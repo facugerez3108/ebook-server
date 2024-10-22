@@ -3,7 +3,7 @@ import pick from "../utils/pick";
 import ApiError from "../utils/ApiError";
 import catchAsync from "../utils/catchAsync";
 import httpStatus from "http-status";
-
+import { Request, Response } from 'express';
 
 const createPrestamo = catchAsync(async(req, res) => {
     const {compradorId, bookId, fechaPrestamo, fechaDevolucion, codigo, status} = req.body;
@@ -27,11 +27,17 @@ const getPrestamos = catchAsync(async(req, res) => {
     res.send(result);
 });
 
-const updatePrestamo = catchAsync(async(req, res) => {
-    const prestamoId = parseInt(req.params.id, 10);
-    const prestamo = await prestamoService.updatePrestamoById(prestamoId, req.body);
-    res.send(prestamo);
-});
+const updatePrestamo = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const updateBody = req.body;
+
+    try{
+        const updatedPrestamo = await prestamoService.updatePrestamoById(parseInt(id), updateBody);
+        res.json(updatedPrestamo);
+    }catch(error){
+        console.error("Error updating book", error);
+    }
+}
 
 const deletePrestamo = catchAsync(async(req, res) => {
     const prestamoId = parseInt(req.params.id, 10);
