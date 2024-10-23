@@ -35,8 +35,18 @@ app.use(xss());
 app.use(compression());
 
 // enable cors
-app.use(cors());
-app.options('*', cors());
+app.use(cors({
+  origin: 'https://ebook-client-kappa.vercel.app',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}));
+app.options('*', cors({
+  origin: 'https://ebook-client-kappa.vercel.app',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}));
 
 // jwt authentication
 app.use(passport.initialize());
