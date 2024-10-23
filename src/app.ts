@@ -41,21 +41,25 @@ const allowedOrigins = ['https://ebook-client-two.vercel.app'];
 
 app.use(cors({
   origin: function (origin, callback) {
-    if(!origin || allowedOrigins.includes(origin)){
-      callback(null, origin)
-    }else{
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, origin);
+    } else {
       callback(new Error('Not allowed by CORS'));
     }
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'x-auth-token', 'x-access-token', 'x-refresh-token', 'x-csrf-token', 'x-csrf-token'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
-app.options('*', cors({
-  origin: allowedOrigins,
-  credentials: true,
-}));
+// Maneja solicitudes preflight antes de otras rutas
+app.options('*', (req, res) => {
+  res.header('Access-Control-Allow-Origin', req.headers.origin);
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.sendStatus(200);
+});
 
 // jwt authentication
 app.use(passport.initialize());
