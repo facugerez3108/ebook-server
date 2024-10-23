@@ -35,7 +35,7 @@ app.use(xss());
 app.use(compression());
 
 // enable cors
-const allowedOrigins = ['https://ebook-client-kappa.vercel.app'];
+const allowedOrigins = ['https://ebook-client-two.vercel.app'];
 
 app.use(cors({
   origin: function (origin, callback) {

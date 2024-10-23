@@ -5,7 +5,7 @@
         "headers": [
           {
             "key": "Access-Control-Allow-Origin",
-            "value": "https://ebook-client-kappa.vercel.app"
+            "value": "https://ebook-server-drab.vercel.app/"
           },
           {
             "key": "Access-Control-Allow-Methods",
