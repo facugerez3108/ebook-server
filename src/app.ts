@@ -6,7 +6,6 @@ import httpStatus from 'http-status';
 import config from './config/config';
 import morgan from './config/morgan';
 import xss from './middlewares/xss';
-import helmet from 'helmet';
 import routes from './routes';
 import { errorConverter, errorHandler } from './middlewares/error';
 import ApiError from './utils/ApiError';
@@ -36,7 +35,6 @@ const allowedOrigins = ['https://ebook-client-two.vercel.app'];
 
 const corsOptions: cors.CorsOptions = {
   origin: function (origin, callback) {
-    // Permitir solicitudes desde el frontend desplegado o desde local para desarrollo
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
@@ -57,12 +55,6 @@ app.options('*', (req, res) => {
   res.header('Access-Control-Allow-Credentials', 'true');
 });
 
-// set security HTTP headers
-//app.use(helmet({
-//  crossOriginResourcePolicy: false,
-//}));
-
-// jwt authentication
 app.use(passport.initialize());
 
 // limit repeated failed requests to auth endpoints
