@@ -21,12 +21,5 @@
         }
       ]
     }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/api/$1",
-      "methods": ["OPTIONS", "GET", "POST", "PUT", "DELETE", "PATCH"]
-    }
   ]
 }
