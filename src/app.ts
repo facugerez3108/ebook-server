@@ -34,7 +34,7 @@ app.use(compression());
 // enable cors
 const allowedOrigins = ['https://ebook-client-two.vercel.app', 'http://localhost:5000'];
 
-app.use(cors({
+app.options('*', cors({
   origin: function (origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
