@@ -32,10 +32,11 @@ app.use(xss());
 app.use(compression());
 
 // enable cors
-const allowedOrigins = ['https://ebook-client-two.vercel.app', 'http://localhost:5000'];
+const allowedOrigins = ['https://ebook-client-two.vercel.app'];
 
-app.options('*', cors({
+const corsOptions: cors.CorsOptions = {
   origin: function (origin, callback) {
+    // Permitir solicitudes desde el frontend desplegado o desde local para desarrollo
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
@@ -43,17 +44,17 @@ app.options('*', cors({
     }
   },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
-}));
+};
 
-// Asegúrate de manejar las solicitudes OPTIONS correctamente
+app.use(cors(corsOptions));
+
 app.options('*', (req, res) => {
   res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   res.header('Access-Control-Allow-Credentials', 'true');
-  res.sendStatus(200); // Respuesta con estado OK
 });
 
 // set security HTTP headers
