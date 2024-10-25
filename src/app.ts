@@ -11,28 +11,14 @@ import { errorConverter, errorHandler } from './middlewares/error';
 import ApiError from './utils/ApiError';
 import { authLimiter } from './middlewares/rateLimiter';
 
-
-
 const app = express();
-//cors
-const allowedOrigins = ['https://ebook-client-two.vercel.app'];
 
-app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-}));
+// enable cors
+app.use(cors());
+app.options('*', cors());
 
-// Elimina la configuración manual de CORS
-//app.options('*', cors()); // Este ajuste manejará todas las solicitudes preflight automáticamente
 
+//enviroment config
 if (config.env !== 'test') {
   app.use(morgan.successHandler);
   app.use(morgan.errorHandler);
