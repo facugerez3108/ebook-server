@@ -31,7 +31,7 @@ app.use(cors({
 }));
 
 // Elimina la configuración manual de CORS
-app.options('*', cors()); // Este ajuste manejará todas las solicitudes preflight automáticamente
+//app.options('*', cors()); // Este ajuste manejará todas las solicitudes preflight automáticamente
 
 if (config.env !== 'test') {
   app.use(morgan.successHandler);
