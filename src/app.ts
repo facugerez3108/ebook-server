@@ -14,9 +14,29 @@ import { authLimiter } from './middlewares/rateLimiter';
 const app = express();
 
 // enable cors
-app.use(cors());
-app.options('*', cors());
+const allowedOrigins = ['https://ebook-client-two.vercel.app'];
 
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
+
+// Manejar específicamente las solicitudes preflight OPTIONS
+app.options('*', (req, res) => {
+  res.header('Access-Control-Allow-Origin', req.headers.origin || 'https://ebook-client-two.vercel.app');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.sendStatus(200); // Enviar 200 OK para manejar las solicitudes de preflight correctamente
+});
 
 //enviroment config
 if (config.env !== 'test') {
