@@ -29,15 +29,17 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
-// Manejar específicamente las solicitudes preflight OPTIONS
+// Manejo específico de preflight requests
 app.options('*', (req, res) => {
-  res.header('Access-Control-Allow-Origin', req.headers.origin || 'https://ebook-client-two.vercel.app');
+  const allowedOrigin = allowedOrigins.includes(req.headers.origin || '') 
+    ? req.headers.origin 
+    : allowedOrigins[0];
+  res.header('Access-Control-Allow-Origin', allowedOrigin);
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   res.header('Access-Control-Allow-Credentials', 'true');
-  res.sendStatus(200); // Enviar 200 OK para manejar las solicitudes de preflight correctamente
+  res.sendStatus(200);
 });
-
 //enviroment config
 if (config.env !== 'test') {
   app.use(morgan.successHandler);
