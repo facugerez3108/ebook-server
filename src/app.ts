@@ -16,18 +16,7 @@ const app = express();
 // cors  enabled
 const allowedOrigins = ['https://ebook-client-two.vercel.app'];
 
-app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-}));
+app.use(cors());
 
 // Manejo de las solicitudes OPTIONS específicamente para asegurar que el preflight funcione.
 app.options('*', (req, res) => {
