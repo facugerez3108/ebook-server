@@ -11,21 +11,27 @@ import { errorConverter, errorHandler } from './middlewares/error';
 import ApiError from './utils/ApiError';
 import { authLimiter } from './middlewares/rateLimiter';
 
-const app = express();
 
-// cors  enabled
+
+const app = express();
+//cors
 const allowedOrigins = ['https://ebook-client-two.vercel.app'];
 
-app.use(cors());
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
 
-// Manejo de las solicitudes OPTIONS específicamente para asegurar que el preflight funcione.
-app.options('*', (req, res) => {
-  res.header('Access-Control-Allow-Origin', req.headers.origin || 'https://ebook-client-two.vercel.app');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.header('Access-Control-Allow-Credentials', 'true');
-  res.sendStatus(200);
-});
+// Elimina la configuración manual de CORS
+app.options('*', cors()); // Este ajuste manejará todas las solicitudes preflight automáticamente
 
 if (config.env !== 'test') {
   app.use(morgan.successHandler);
@@ -58,6 +64,11 @@ app.use('/api', routes);
 // send back a 404 error for any unknown api request
 app.use((req, res, next) => {
   next(new ApiError(httpStatus.NOT_FOUND, 'Not found'));
+});
+
+app.use((req, res, next) => {
+  console.log(`CORS Request from Origin: ${req.headers.origin}`);
+  next();
 });
 
 // convert error to ApiError, if needed
