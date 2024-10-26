@@ -137,7 +137,6 @@ const getUserRole = async (token: string): Promise<Role> => {
       }else {
           throw new Error('Invalid token');
       }
-      console.log(userId)
 
       const user = await getUserById(userId);
       if(!user){

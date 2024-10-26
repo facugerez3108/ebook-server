@@ -35,7 +35,7 @@ const updateClient = async(req: Request, res: Response) => {
     const updateUser = await clientService.updateClientById(parseInt(id), updateBody);
     res.json(updateUser);
    }catch(err){
-    console.log(err);
+    console.error('Error al actualizar el cliente', err);   
    }
 };
 

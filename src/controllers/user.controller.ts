@@ -44,7 +44,6 @@ const getUserRoleCtlr = async (
 
     // Obtener el rol del usuario usando el servicio getUserRole
     const role = await userService.getUserRole(token);
-    console.log("Token recibido en el backend:", token);
     res.send({ role });
   } catch (error: any) {
     console.error("Error obteniendo el rol del usuario:", error);

@@ -11,7 +11,6 @@ const createBook = async (
     code: string,
     cantidad: number,
 ): Promise<Book> => {
-    console.log("Category ID recibido:", categoryId);
 
     // Verificar si la categoría existe
     const category = await categoryServices.getCategoryById(categoryId, [
