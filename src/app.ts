@@ -15,26 +15,15 @@ const app = express();
 
 // enable cors
 
-const allowedOrigins = [
-  'https://ebook-client.netlify.app',
-  'http://localhost:5173' // para dev
-];
-
-app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('CORS not allowed'));
-    }
-  },
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
-
-app.options('*', cors());
-
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', 'https://ebook-client.netlify.app');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  next();
+});
 
 //enviroment config
 if (config.env !== 'test') {
