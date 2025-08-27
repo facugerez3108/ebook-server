@@ -46,6 +46,7 @@ const deleteClient = catchAsync(async(req, res) => {
 });
 
 //fuck vercel
+//fuck vercel all my homies use render
 
 export default {
     createClient,
