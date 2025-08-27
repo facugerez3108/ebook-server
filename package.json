@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
     "start": "ts-node ./src/index.ts",
+    "build": "tsc",
     "dev": "nodemon",
     "db:push": "prisma db push"
   },

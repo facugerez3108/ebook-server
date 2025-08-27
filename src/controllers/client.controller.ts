@@ -45,6 +45,8 @@ const deleteClient = catchAsync(async(req, res) => {
     res.status(httpStatus.NO_CONTENT).send();
 });
 
+//fuck vercel
+
 export default {
     createClient,
     getClients,
